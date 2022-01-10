@@ -1,31 +1,41 @@
 #! /bin/bash
 
-echo "Welcome to flip coin combination"
-
 declare -A flipCoin
+#read -p "How many times you want to flip coin " noOfTime
+
 IS_HEAD=1
 counter=0
-read -p "How many times you want to flip coin " noOfTime
-function flipCoinFunction(){
+headCount=0
+tailCount=0
 
-        flipCoinResult=$((RANDOM%2))
-        #echo $flipCoinResult
-
-        if [ $flipCoinResult -eq $IS_HEAD ]
+while [ 1 ]
+do
+	flipCoinResult=$((RANDOM%2))
+	if [ $flipCoinResult -eq $IS_HEAD ]
         then
-                echo "H"
+                echo "Head"
+		flipCoin[$counter]="Head"
+		((headCount++))
         else
-                echo "T"
+                echo "Tail"
+		flipCoin[$counter]="Tail"
+		((tailCount++))
         fi
-}
-while [ $counter -lt $noOfTime ]
-do
-                returnValueFromFunction=`flipCoinFunction`
-                flipCoin[$counter]=$returnValueFromFunction
-                ((counter++))
+
+	if [[ ($headCount -eq 21) && ($tailCount -eq 21) ]]
+	then
+		echo "Match tie"
+		break
+	elif [ $headCount -eq 21 ]
+	then
+		echo "HEAD won the match"
+		break
+	elif [ $tailCount -eq 21 ]
+	then
+		echo  "TAIL won the match"
+		break
+	fi
 done
 
-for key in "${!flipCoin[@]}"; 
-do
-    echo "$key ${flipCoin[$key]}"
-done
+echo "The number of times won the head: $headCount"
+echo "The number of times won the tail: $tailCount"
